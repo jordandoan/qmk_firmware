@@ -828,7 +828,7 @@ void rgblight_effect_rainbow_mood(uint8_t interval) {
 }
 #endif
 
-#ifdef RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#ifdef RGBLIGHT_EFFECT_RAINBOW_(SWIRL)
 #ifndef RGBLIGHT_RAINBOW_SWIRL_RANGE
   #define RGBLIGHT_RAINBOW_SWIRL_RANGE 360
 #endif
