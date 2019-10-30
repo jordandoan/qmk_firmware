@@ -847,6 +847,7 @@ void rgblight_effect_breathing(animation_status_t *anim) {
 
 #ifdef RGBLIGHT_EFFECT_RAINBOW_MOOD
 <<<<<<< HEAD
+<<<<<<< HEAD
 __attribute__ ((weak))
 const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {60,30,5};
 
@@ -858,6 +859,9 @@ void rgblight_effect_rainbow_mood(uint8_t interval) {
 =======
 __attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 30};
 >>>>>>> f183af14adbdea0789bf85bda46b81139e4524a8
+=======
+__attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 30};
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
 
 void rgblight_effect_rainbow_mood(animation_status_t *anim) {
     rgblight_sethsv_noeeprom_old(anim->current_hue, rgblight_config.sat, rgblight_config.val);
@@ -873,6 +877,9 @@ void rgblight_effect_rainbow_mood(animation_status_t *anim) {
 __attribute__((weak)) const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {100, 50, 20};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
 __attribute__ ((weak))
 const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {20,5,1};
 
@@ -883,6 +890,7 @@ void rgblight_effect_rainbow_swirl(uint8_t interval) {
   uint8_t i;
 
   uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_SWIRL_INTERVALS[interval / 2], 1, 100);
+<<<<<<< HEAD
 
   if (timer_elapsed(last_timer) < interval_time) {
     return;
@@ -1097,3 +1105,5 @@ void rgblight_effect_alternating(animation_status_t *anim) {
     anim->pos = (anim->pos + 1) % 2;
 }
 #endif
+=======
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
