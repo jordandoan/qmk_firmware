@@ -846,7 +846,22 @@ void rgblight_effect_breathing(animation_status_t *anim) {
 #endif
 
 #ifdef RGBLIGHT_EFFECT_RAINBOW_MOOD
+<<<<<<< HEAD
+<<<<<<< HEAD
+__attribute__ ((weak))
+const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {60,30,5};
+
+void rgblight_effect_rainbow_mood(uint8_t interval) {
+  static uint16_t current_hue = 0;
+  static uint16_t last_timer = 0;
+
+  uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_MOOD_INTERVALS[interval], 5, 100);
+=======
 __attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 30};
+>>>>>>> f183af14adbdea0789bf85bda46b81139e4524a8
+=======
+__attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 30};
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
 
 void rgblight_effect_rainbow_mood(animation_status_t *anim) {
     rgblight_sethsv_noeeprom_old(anim->current_hue, rgblight_config.sat, rgblight_config.val);
@@ -861,6 +876,10 @@ void rgblight_effect_rainbow_mood(animation_status_t *anim) {
 
 __attribute__((weak)) const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {100, 50, 20};
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
 __attribute__ ((weak))
 const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {20,5,1};
 
@@ -871,3 +890,220 @@ void rgblight_effect_rainbow_swirl(uint8_t interval) {
   uint8_t i;
 
   uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_SWIRL_INTERVALS[interval / 2], 1, 100);
+<<<<<<< HEAD
+
+  if (timer_elapsed(last_timer) < interval_time) {
+    return;
+  }
+  last_timer = timer_read();
+  for (i = 0; i < RGBLED_NUM; i++) {
+    hue = (RGBLIGHT_RAINBOW_SWIRL_RANGE / RGBLED_NUM * i + current_hue) % 360;
+    sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i]);
+  }
+  rgblight_set();
+
+  if (interval % 2) {
+    current_hue = (current_hue + 1) % 360;
+  } else {
+    if (current_hue - 1 < 0) {
+      current_hue = 359;
+=======
+void rgblight_effect_rainbow_swirl(animation_status_t *anim) {
+    uint8_t hue;
+    uint8_t i;
+
+    for (i = 0; i < effect_num_leds; i++) {
+        hue = (RGBLIGHT_RAINBOW_SWIRL_RANGE / effect_num_leds * i + anim->current_hue);
+        sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i + effect_start_pos]);
+    }
+    rgblight_set();
+
+    if (anim->delta % 2) {
+        anim->current_hue++;
+>>>>>>> f183af14adbdea0789bf85bda46b81139e4524a8
+    } else {
+        anim->current_hue--;
+    }
+}
+#endif
+
+#ifdef RGBLIGHT_EFFECT_SNAKE
+__attribute__((weak)) const uint8_t RGBLED_SNAKE_INTERVALS[] PROGMEM = {100, 50, 20};
+
+void rgblight_effect_snake(animation_status_t *anim) {
+    static uint8_t pos = 0;
+    uint8_t        i, j;
+    int8_t         k;
+    int8_t         increment = 1;
+
+    if (anim->delta % 2) {
+        increment = -1;
+    }
+
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+    if (anim->pos == 0) {  // restart signal
+        if (increment == 1) {
+            pos = effect_num_leds - 1;
+        } else {
+            pos = 0;
+        }
+        anim->pos = 1;
+    }
+#    endif
+
+    for (i = 0; i < effect_num_leds; i++) {
+        LED_TYPE *ledp = led + i + effect_start_pos;
+        ledp->r        = 0;
+        ledp->g        = 0;
+        ledp->b        = 0;
+        for (j = 0; j < RGBLIGHT_EFFECT_SNAKE_LENGTH; j++) {
+            k = pos + j * increment;
+            if (k > RGBLED_NUM) {
+                k = k % RGBLED_NUM;
+            }
+            if (k < 0) {
+                k = k + effect_num_leds;
+            }
+            if (i == k) {
+                sethsv(rgblight_config.hue, rgblight_config.sat, (uint8_t)(rgblight_config.val * (RGBLIGHT_EFFECT_SNAKE_LENGTH - j) / RGBLIGHT_EFFECT_SNAKE_LENGTH), ledp);
+            }
+        }
+    }
+    rgblight_set();
+    if (increment == 1) {
+        if (pos - 1 < 0) {
+            pos = effect_num_leds - 1;
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+            anim->pos = 0;
+#    endif
+        } else {
+            pos -= 1;
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+            anim->pos = 1;
+#    endif
+        }
+    } else {
+        pos = (pos + 1) % effect_num_leds;
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+        anim->pos = pos;
+#    endif
+    }
+}
+#endif
+
+#ifdef RGBLIGHT_EFFECT_KNIGHT
+__attribute__((weak)) const uint8_t RGBLED_KNIGHT_INTERVALS[] PROGMEM = {127, 63, 31};
+
+void rgblight_effect_knight(animation_status_t *anim) {
+    static int8_t low_bound  = 0;
+    static int8_t high_bound = RGBLIGHT_EFFECT_KNIGHT_LENGTH - 1;
+    static int8_t increment  = 1;
+    uint8_t       i, cur;
+
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+    if (anim->pos == 0) {  // restart signal
+        anim->pos  = 1;
+        low_bound  = 0;
+        high_bound = RGBLIGHT_EFFECT_KNIGHT_LENGTH - 1;
+        increment  = 1;
+    }
+#    endif
+    // Set all the LEDs to 0
+    for (i = effect_start_pos; i < effect_end_pos; i++) {
+        led[i].r = 0;
+        led[i].g = 0;
+        led[i].b = 0;
+    }
+    // Determine which LEDs should be lit up
+    for (i = 0; i < RGBLIGHT_EFFECT_KNIGHT_LED_NUM; i++) {
+        cur = (i + RGBLIGHT_EFFECT_KNIGHT_OFFSET) % effect_num_leds + effect_start_pos;
+
+        if (i >= low_bound && i <= high_bound) {
+            sethsv(rgblight_config.hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[cur]);
+        } else {
+            led[cur].r = 0;
+            led[cur].g = 0;
+            led[cur].b = 0;
+        }
+    }
+    rgblight_set();
+
+    // Move from low_bound to high_bound changing the direction we increment each
+    // time a boundary is hit.
+    low_bound += increment;
+    high_bound += increment;
+
+    if (high_bound <= 0 || low_bound >= RGBLIGHT_EFFECT_KNIGHT_LED_NUM - 1) {
+        increment = -increment;
+#    if defined(RGBLIGHT_SPLIT) && !defined(RGBLIGHT_SPLIT_NO_ANIMATION_SYNC)
+        if (increment == 1) {
+            anim->pos = 0;
+        }
+#    endif
+    }
+}
+#endif
+
+#ifdef RGBLIGHT_EFFECT_CHRISTMAS
+void rgblight_effect_christmas(animation_status_t *anim) {
+    uint8_t hue;
+    uint8_t i;
+
+    anim->current_offset = (anim->current_offset + 1) % 2;
+    for (i = 0; i < effect_num_leds; i++) {
+        hue = 0 + ((i / RGBLIGHT_EFFECT_CHRISTMAS_STEP + anim->current_offset) % 2) * 85;
+        sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i + effect_start_pos]);
+    }
+    rgblight_set();
+}
+#endif
+
+#ifdef RGBLIGHT_EFFECT_RGB_TEST
+__attribute__((weak)) const uint16_t RGBLED_RGBTEST_INTERVALS[] PROGMEM = {1024};
+
+void rgblight_effect_rgbtest(animation_status_t *anim) {
+    static uint8_t maxval = 0;
+    uint8_t        g;
+    uint8_t        r;
+    uint8_t        b;
+
+    if (maxval == 0) {
+        LED_TYPE tmp_led;
+        sethsv(0, 255, RGBLIGHT_LIMIT_VAL, &tmp_led);
+        maxval = tmp_led.r;
+    }
+    g = r = b = 0;
+    switch (anim->pos) {
+        case 0:
+            r = maxval;
+            break;
+        case 1:
+            g = maxval;
+            break;
+        case 2:
+            b = maxval;
+            break;
+    }
+    rgblight_setrgb(r, g, b);
+    anim->pos = (anim->pos + 1) % 3;
+}
+#endif
+
+#ifdef RGBLIGHT_EFFECT_ALTERNATING
+void rgblight_effect_alternating(animation_status_t *anim) {
+    for (int i = 0; i < effect_num_leds; i++) {
+        LED_TYPE *ledp = led + i + effect_start_pos;
+        if (i < effect_num_leds / 2 && anim->pos) {
+            sethsv(rgblight_config.hue, rgblight_config.sat, rgblight_config.val, ledp);
+        } else if (i >= effect_num_leds / 2 && !anim->pos) {
+            sethsv(rgblight_config.hue, rgblight_config.sat, rgblight_config.val, ledp);
+        } else {
+            sethsv(rgblight_config.hue, rgblight_config.sat, 0, ledp);
+        }
+    }
+    rgblight_set();
+    anim->pos = (anim->pos + 1) % 2;
+}
+#endif
+=======
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
