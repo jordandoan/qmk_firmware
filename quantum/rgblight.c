@@ -942,7 +942,15 @@ void rgblight_effect_breathing(animation_status_t *anim) {
 #endif
 
 #ifdef RGBLIGHT_EFFECT_RAINBOW_MOOD
-__attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 30};
+
+__attribute__ ((weak))
+const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {60,30,5};
+
+void rgblight_effect_rainbow_mood(uint8_t interval) {
+  static uint16_t current_hue = 0;
+  static uint16_t last_timer = 0;
+
+  uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_MOOD_INTERVALS[interval], 5, 100);
 
 void rgblight_effect_rainbow_mood(animation_status_t *anim) {
     rgblight_sethsv_noeeprom_old(anim->current_hue, rgblight_config.sat, rgblight_config.val);
@@ -955,20 +963,35 @@ void rgblight_effect_rainbow_mood(animation_status_t *anim) {
 #        define RGBLIGHT_RAINBOW_SWIRL_RANGE 255
 #    endif
 
-__attribute__((weak)) const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {100, 50, 20};
 
-void rgblight_effect_rainbow_swirl(animation_status_t *anim) {
-    uint8_t hue;
-    uint8_t i;
 
-    for (i = 0; i < effect_num_leds; i++) {
-        hue = (RGBLIGHT_RAINBOW_SWIRL_RANGE / effect_num_leds * i + anim->current_hue);
-        sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i + effect_start_pos]);
-    }
-    rgblight_set();
+__attribute__ ((weak))
+const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {20,5,1};
 
-    if (anim->delta % 2) {
-        anim->current_hue++;
+void rgblight_effect_rainbow_swirl(uint8_t interval) {
+  static uint16_t current_hue = 0;
+  static uint16_t last_timer = 0;
+  uint16_t hue;
+  uint8_t i;
+
+  uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_SWIRL_INTERVALS[interval / 2], 1, 100);
+
+  if (timer_elapsed(last_timer) < interval_time) {
+    return;
+  }
+  last_timer = timer_read();
+  for (i = 0; i < RGBLED_NUM; i++) {
+    hue = (RGBLIGHT_RAINBOW_SWIRL_RANGE / RGBLED_NUM * i + current_hue) % 360;
+    sethsv(hue, rgblight_config.sat, rgblight_config.val, (LED_TYPE *)&led[i]);
+  }
+  rgblight_set();
+
+  if (interval % 2) {
+    current_hue = (current_hue + 1) % 360;
+  } else {
+    if (current_hue - 1 < 0) {
+      current_hue = 359;
+>>>>>>> Merging
     } else {
         anim->current_hue--;
     }
