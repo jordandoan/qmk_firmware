@@ -31,6 +31,7 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 AUDIO_ENABLE = no           # Audio output on port C6
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 <<<<<<< HEAD
+<<<<<<< HEAD
 HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs
 
 LAYOUTS = 65_ansi_blocker 65_iso_blocker
@@ -38,3 +39,12 @@ LAYOUTS = 65_ansi_blocker 65_iso_blocker
 HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs (+400)
 VELOCIKEY_ENABLE = yes
 >>>>>>> Canoe mouse settings enabled, my space keymap is up and identical to canoe
+=======
+HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs (+400)
+<<<<<<< HEAD
+VELOCIKEY_ENABLE = yes
+=======
+
+LAYOUTS = 65_ansi_blocker
+>>>>>>> f76682ad3944d899de6d5e7f3e675101dbee0179
+>>>>>>> f0c1e2aa41e15e5d5b41a2b6d53b4ec16e6915fa

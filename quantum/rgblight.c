@@ -117,7 +117,6 @@ void rgblight_set_clipping_range(uint8_t start_pos, uint8_t num_leds) {
     clipping_start_pos = start_pos;
     clipping_num_leds  = num_leds;
 }
-
 void rgblight_set_effect_range(uint8_t start_pos, uint8_t num_leds) {
     if (start_pos >= RGBLED_NUM) return;
     if (start_pos + num_leds > RGBLED_NUM) return;
@@ -943,14 +942,8 @@ void rgblight_effect_breathing(animation_status_t *anim) {
 
 #ifdef RGBLIGHT_EFFECT_RAINBOW_MOOD
 
-__attribute__ ((weak))
-const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {60,30,5};
+__attribute__((weak)) const uint8_t RGBLED_RAINBOW_MOOD_INTERVALS[] PROGMEM = {120, 60, 5};
 
-void rgblight_effect_rainbow_mood(uint8_t interval) {
-  static uint16_t current_hue = 0;
-  static uint16_t last_timer = 0;
-
-  uint8_t interval_time = get_interval_time(&RGBLED_RAINBOW_MOOD_INTERVALS[interval], 5, 100);
 
 void rgblight_effect_rainbow_mood(animation_status_t *anim) {
     rgblight_sethsv_noeeprom_old(anim->current_hue, rgblight_config.sat, rgblight_config.val);
@@ -962,6 +955,9 @@ void rgblight_effect_rainbow_mood(animation_status_t *anim) {
 #    ifndef RGBLIGHT_RAINBOW_SWIRL_RANGE
 #        define RGBLIGHT_RAINBOW_SWIRL_RANGE 255
 #    endif
+
+
+__attribute__((weak)) const uint8_t RGBLED_RAINBOW_SWIRL_INTERVALS[] PROGMEM = {100, 50, 10};
 
 
 
