@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "hotswap.h"
+#include "rgblight.h"
 
 // Optional override functions below.
 // You can leave any or all of these undefined.
@@ -23,18 +24,16 @@
 void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
-
   setPinOutput(C6);
   setPinOutput(C7);
   setPinOutput(F7);
-  
   matrix_init_user();
 }
 
 void matrix_scan_kb(void) {
   // put your looping keyboard code here
   // runs every cycle (a lot)
-
+  // rgblight_sethsv_range(rgblight_get_hue(), rgblight_get_sat(), rgblight_get_val(), 4, 22);
   matrix_scan_user();
 }
 
