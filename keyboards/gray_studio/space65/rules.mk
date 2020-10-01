@@ -32,7 +32,10 @@ AUDIO_ENABLE = no           # Audio output on port C6
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs
+=======
+>>>>>>> 11c308d436180974b7719ce78cdffdd83a1302c0
 
 LAYOUTS = 65_ansi_blocker 65_iso_blocker
 =======
