@@ -1243,9 +1243,6 @@ void rgblight_effect_alternating(animation_status_t *anim) {
     rgblight_set();
     anim->pos = (anim->pos + 1) % 2;
 }
-<<<<<<< HEAD
-#endif
-=======
 #endif
 
 #ifdef RGBLIGHT_EFFECT_TWINKLE
@@ -1302,4 +1299,3 @@ void rgblight_effect_twinkle(animation_status_t *anim) {
     rgblight_set();
 }
 #endif
->>>>>>> 11c308d436180974b7719ce78cdffdd83a1302c0
